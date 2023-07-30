@@ -12,6 +12,8 @@ void setup()
   init_mppt();
   setupDHT();
   setupADS();
+
+  pinMode(27, INPUT);
 }
 //FORMATAÇÃO
 //CORRENTE DO MOTOR / CORRENTE DAS BATERIAS / TEMPERATURA / UMIDADE / TENSAO DE ALIMENTAÇÃO DA PCB / ESTADO DA ARRAY SOLAR 1 / ESTADO ARRAY SOLAR 2
@@ -36,10 +38,13 @@ void loop()
   
     String all_info =  String(motor_current) + "," + String(battery_current) + "," + String(temperature) + "," + String(humidity)
                         + "," + String(voltage_alimentation) + "," + String(solarArray1_state) + "," + String(solarArray2_state) + "," + result;
-    //send_socket("80.5,90.0,30.0,70,12,1,1,48,50,20");
+                        
     send_socket(all_info);
-    //Serial.println(all_info);
-    //Serial.println('abc');
     previousmillis = currentmillis;
+
+    if(digitalRead(27) == 0){
+      delay(500);
+      ESP.restart();
+    }
   }
 }
