@@ -27,7 +27,7 @@ void loop()
 
   if (currentmillis - previousmillis >= 1000)
   {
-    String result = get_dados_mppt(); //Ordem dos dados: tensao das baterias / tensao do painel solar / corrente / rendimento
+    String result = get_dados_mppt(); //Ordem dos dados: tensao das baterias(saída MPPT) / tensao do painel solar(entrada MPPT) / corrente MPPT
     float temperature = get_temperature();
     float humidity = get_humidity();
     float voltage_alimentation = get_font_voltage();
