@@ -14,7 +14,7 @@ float get_motor_current(){
     float voltageRead = result*(2*LIMIT_GAIN_ONE/(RESOLUTION_16BIT-1.0))/1000.0; 
 
     float hallAmps = 0;
-    if (voltageRead > VREF_100A)
+    if (voltageRead >= VREF_100A)
         hallAmps = (voltageRead - VREF_100A) * (HSTS016L_NOMINAL_CURRENT_100A / HSTS016L_VARIATION);
     else if (voltageRead < VREF_100A)
         hallAmps = (VREF_100A - voltageRead) * (HSTS016L_NOMINAL_CURRENT_100A / HSTS016L_VARIATION);
@@ -27,7 +27,7 @@ float get_battery_current(){
   int16_t result = ads_1115.readADC_SingleEnded(ADS1115_BATTERY_CURRENT);
   float voltageRead = result*(2*LIMIT_GAIN_ONE/(RESOLUTION_16BIT-1.0))/1000.0; 
   float hallAmps = 0;
-  if (voltageRead > VREF_150A)
+  if (voltageRead >= VREF_150A)
       hallAmps = (voltageRead - VREF_150A) * (HSTS016L_NOMINAL_CURRENT_150A / HSTS016L_VARIATION);
   else if (voltageRead < VREF_150A)
       hallAmps = (VREF_150A - voltageRead) * (HSTS016L_NOMINAL_CURRENT_150A / HSTS016L_VARIATION);
@@ -47,30 +47,36 @@ float get_font_voltage(){
 
 //####################### LEITURA DOS DADOS DAS ENTRADAS ANALÓGICAS DAS PORTAS GPIO34 E GPIO35 - ACS712
 
-int get_solarArray1_state(){
+float get_solarArray1_state(){
   int bitsRead = analogRead(PIN_ACS_1);
   float voltageRead = bitsRead * ESP_MAXIMUM_VOLTAGE_IN / 4095.0;  //Convert from bits to the float number representing the voltage read
 
-  int array_state = 0;
+  /*int array_state = 0;
 
   if (abs((voltageRead - ACS_1_AVARAGE)) > 0.2){
     array_state = 1;
   }
-  return array_state;
+  */
+
+  float ampRead = abs(voltageRead - ACS_2_AVARAGE)/ACS712_OUTPUT_SENSITIVITY;
+  
+  return ampRead;
 
 }
 
-int get_solarArray2_state(){
+float get_solarArray2_state(){
   int bitsRead = analogRead(PIN_ACS_2);
   float voltageRead = bitsRead * ESP_MAXIMUM_VOLTAGE_IN / 4095.0;  //Convert from bits to the float number representing the voltage read
   
-  int array_state = 0;
+  /*int array_state = 0;
 
   if (abs((voltageRead - ACS_2_AVARAGE)) > 0.2){
     array_state = 1;
-  }
+  }*/
 
-  return array_state;
+  float ampRead = abs(voltageRead - ACS_2_AVARAGE)/ACS712_OUTPUT_SENSITIVITY;
+
+  return ampRead;
 }
 
 //####################### LEITURA DOS DADOS DAS RELACIONADAS AO DHT

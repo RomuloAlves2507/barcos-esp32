@@ -22,7 +22,7 @@
 
 //Constants
 #define ESP_MAXIMUM_VOLTAGE_IN 3.3
-#define ACS712_OUTPUT_SENSITIVITY 66.0 // 66 mV/A - https://www.allegromicro.com/~/media/files/datasheets/acs712-datasheet.ashx
+#define ACS712_OUTPUT_SENSITIVITY 0.0833 // 83.3 mV/A - https://www.allegromicro.com/~/media/files/datasheets/acs712-datasheet.ashx
 #define ACS712_VCC 5.0
 #define DHTTYPE DHT11 // DHT 11
 #define HSTS016L_NOMINAL_CURRENT_100A 100.0
@@ -43,8 +43,8 @@ float get_motor_current();
 float get_battery_current();
 float get_font_voltage();
 
-int get_solarArray1_state();
-int get_solarArray2_state();
+float get_solarArray1_state();
+float get_solarArray2_state();
 
 float get_font_current();
 float get_mppt_current();
