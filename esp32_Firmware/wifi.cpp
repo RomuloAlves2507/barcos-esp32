@@ -1,8 +1,8 @@
 #include "wifi.h"
 //const char* ssid = "Pedro Buzatto";
 //const char* password =  "abcd1234";
-const char* ssid = "agatti";
-const char* password =  "f76523a404a9";
+const char* ssid = "TESTECPID";
+const char* password =  "solares1";
 //const char* ssid = "NET_2GEA12B2";
 //const char* password =  "E2EA12B2";
 unsigned long previousMillis = 0;
