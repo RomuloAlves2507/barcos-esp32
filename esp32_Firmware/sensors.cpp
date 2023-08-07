@@ -14,10 +14,13 @@ float get_motor_current(){
     float voltageRead = result*(2*LIMIT_GAIN_ONE/(RESOLUTION_16BIT-1.0))/1000.0; 
 
     float hallAmps = 0;
-    if (voltageRead >= VREF_100A)
-        hallAmps = (voltageRead - VREF_100A) * (HSTS016L_NOMINAL_CURRENT_100A / HSTS016L_VARIATION);
-    else if (voltageRead < VREF_100A)
-        hallAmps = (VREF_100A - voltageRead) * (HSTS016L_NOMINAL_CURRENT_100A / HSTS016L_VARIATION);
+
+    // O código abaixo é o correto porém, durante o DSB, tivemos que inverter a corrente da bateria com o do motor.
+    //if (voltageRead >= VREF_100A)
+    //    hallAmps = (voltageRead - VREF_100A) * (HSTS016L_NOMINAL_CURRENT_100A / HSTS016L_VARIATION);
+    //else if (voltageRead < VREF_100A)
+    //   hallAmps = (VREF_100A - voltageRead) * (HSTS016L_NOMINAL_CURRENT_100A / HSTS016L_VARIATION);
+    hallAmps = (voltageRead - VREF_100A) * (HSTS016L_NOMINAL_CURRENT_100A / HSTS016L_VARIATION);
     return hallAmps;
 }
 
