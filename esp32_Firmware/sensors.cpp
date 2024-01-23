@@ -8,19 +8,14 @@ DHT dht(PIN_DHT, DHTTYPE);
 //####################### FUNÇÕES DE LEITURA DOS DADOS DO ADS1115
 float get_motor_current(){
     ads_1115.setGain(GAIN_ONE);        // 1x gain   + 4.096V  1 bit = 0.0625
-    //Serial.print("AAAAAAAA");
     
     int16_t result = ads_1115.readADC_SingleEnded(ADS1115_MOTOR_CURRENT);
     float voltageRead = result*(2*LIMIT_GAIN_ONE/(RESOLUTION_16BIT-1.0))/1000.0; 
 
     float hallAmps = 0;
 
-    // O código abaixo é o correto porém, durante o DSB, tivemos que inverter a corrente da bateria com o do motor.
-    //if (voltageRead >= VREF_100A)
-    //    hallAmps = (voltageRead - VREF_100A) * (HSTS016L_NOMINAL_CURRENT_100A / HSTS016L_VARIATION);
-    //else if (voltageRead < VREF_100A)
-    //   hallAmps = (VREF_100A - voltageRead) * (HSTS016L_NOMINAL_CURRENT_100A / HSTS016L_VARIATION);
     hallAmps = (voltageRead - VREF_100A) * (HSTS016L_NOMINAL_CURRENT_100A / HSTS016L_VARIATION);
+
     return hallAmps;
 }
 
