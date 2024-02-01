@@ -25,6 +25,7 @@ typedef struct
  // float potencia_ontem;         
   //float rendimento_hoje;        
   //float maxima_potencia;
+  uint16_t erro_counter = 0;
 } dadosmppt;
 
 dadosmppt dm;
@@ -45,7 +46,12 @@ void init_mppt(void)
 void read_mppt()
 {
   //SE A PORTA SERIAL NÃO ESTIVER CONECTADA VAI SEMPRE MANDAR MENSAGEM DE ERRO COM VALORES NEGATIVOS
-  if (!Serial2.available()){ 
+  if (!Serial2.available()){
+
+    dm.erro_counter++;   //Num ciclo do mppt, ele gera muitos mais erros do que dados (fica um tempo ocioso). Com isso enviamos o último valor válido e, se tivermos 4000 erros no
+    // Serial2.available enviamos o -1 (erro de leitura). O 4000 foi um valor obtido empiricamente, não tem uma lógica por trás
+    
+    if(dm.erro_counter > 4000){
     dm.tensao_bateria = -1.0;
     dm.corrente_carregamento =-1.0;
     dm.tensao_painel = -1.0;
@@ -53,13 +59,16 @@ void read_mppt()
     //dm.potencia_ontem = -1.0;
     //dm.rendimento_hoje = -1.0;
     //dm.maxima_potencia = -1.0;
+    }
+
   }
   else {                                                  //  The device transmits blocks of data at 1 second intervals. Each field is sent using the following format:
+    dm.erro_counter = 0;
     String label, val;                                    // <Newline><Field-Label><Tab><Field-Value>
     label = Serial2.readStringUntil('\t');                // this is the actual line that reads the label from the mppt controller
     val = Serial2.readStringUntil('\r\r\n');              // this is the line that reads the value of the label
     char buf[45];
-
+    
     if (label == "I")   //Medido em mA                    // I chose to select certain paramaters that were good for me. check the Victron whitepaper for all labels.
     {                                                     // In this case I chose to read charging current   
       val.toCharArray(buf, sizeof(buf));                  // conversion of val to a character array. Don't ask me why, I saw it in one of the examples of Adafruit and it works.
