@@ -22,8 +22,7 @@ void setup()
   setupDHT();
   setupADS();
 
- // pinMode(27, INPUT);
- }
+}
 //FORMATAÇÃO
 //CORRENTE DO MOTOR / CORRENTE DAS BATERIAS / TEMPERATURA / UMIDADE / TENSAO DE ALIMENTAÇÃO DA PCB / ESTADO DA ARRAY SOLAR 1 / ESTADO ARRAY SOLAR 2
 //TENSAO NA SAIDA DO MPPT (BATT) / TENSAO NA ENTRADA DO MPPT (PLACAS) / CORRENTE DO MPPT
@@ -34,9 +33,13 @@ void loop()
   connection_socket();
   unsigned long currentmillis = millis();
 
+  // O mppt tem uma taxa lenta de envio dos seus dados, portanto se deixarmos ele no if abaixo podemos pegar o período em que ele está ocioso (não enviando dados), gerando 
+  // assim erros nos dados. Da forma que está, garantimos que estamos enviando o último dado válido.
+
+  String result = get_dados_mppt(); //Ordem dos dados: tensao das baterias(saída MPPT) / tensao do painel solar(entrada MPPT) / corrente MPPT
+
   if (currentmillis - previousmillis >= 1000)
   {
-    String result = get_dados_mppt(); //Ordem dos dados: tensao das baterias(saída MPPT) / tensao do painel solar(entrada MPPT) / corrente MPPT
     float temperature = get_temperature();
     float humidity = get_humidity();
     //float voltage_alimentation = get_font_voltage();
