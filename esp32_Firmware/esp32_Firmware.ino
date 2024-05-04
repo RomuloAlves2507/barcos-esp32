@@ -49,6 +49,7 @@ void loop()
     float solarArray1_state = get_solarArray1_state();
     float solarArray2_state = get_solarArray2_state();
   
+    String version = "1";
     String all_info =  version + "," + String(motor_current) + "," + String(battery_current) + "," + String(temperature) + "," + String(humidity)
                         + "," + String(voltage_alimentation) + "," + String(solarArray1_state) + "," + String(solarArray2_state) + "," + result;
 
@@ -57,5 +58,5 @@ void loop()
     send_socket(all_info);
     previousmillis = currentmillis;
 
-  }
+    }
 }
