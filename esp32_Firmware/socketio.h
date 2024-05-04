@@ -2,15 +2,15 @@
 #define __SOCKETIO_H__
 
 #include <Arduino.h>
-#include <WebSocketsClient.h>
-#include <SocketIOclient.h>
+#include <SocketIoClient.h>
 #include <ArduinoJson.h>
-
+#include <ESP32httpUpdate.h>
+#include <Preferences.h>
 
 void init_socket();
 void connection_socket();
 void send_socket(String info);
-void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length);
+void deep_sleep();
 
 
 #endif
