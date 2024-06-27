@@ -5,13 +5,18 @@ Adafruit_ADS1115 ads_1115;
 DHT dht(PIN_DHT, DHTTYPE);
 
 
+//TODO: COLOCAR LINKS PRAS DOCUMENTACOES E DATASHEETS
+
 //####################### FUNÇÕES DE LEITURA DOS DADOS DO ADS1115
 float get_motor_current(){
-    ads_1115.setGain(GAIN_ONE);        // 1x gain   + 4.096V  1 bit = 0.0625
+    //como o sinal de tensão q vem do sensor de corrente varia no max 0.625V, 
+    //acho que o ganho 4 é melhor pq é mais preciso (mas aí precisa ler só o offset de tensão):
+    // ads.setGain(GAIN_ONE);        // 1x gain   +/- 4.096V  1 bit =      0.125mV
+    // ads.setGain(GAIN_FOUR);       // 4x gain   +/- 1.024V  1 bit =       0.03125mV
+    ads_1115.setGain(GAIN_ONE);        // 1x gain   + 4.096V  1 bit = 0.0625 //TESTAR OUTROS GANHOS
     
     int16_t result = ads_1115.readADC_SingleEnded(ADS1115_MOTOR_CURRENT);
-    float voltageRead = result*(2*LIMIT_GAIN_ONE/(RESOLUTION_16BIT-1.0))/1000.0; 
-
+    float voltageRead = ads_1115.computeVolts(result);
     float hallAmps = 0;
 
     hallAmps = (voltageRead - VREF_100A) * (HSTS016L_NOMINAL_CURRENT_100A / HSTS016L_VARIATION);
@@ -23,12 +28,12 @@ float get_battery_current(){
     ads_1115.setGain(GAIN_ONE);        // 1x gain   + 4.096V  1 bit = 0.0625
 
   int16_t result = ads_1115.readADC_SingleEnded(ADS1115_BATTERY_CURRENT);
-  float voltageRead = result*(2*LIMIT_GAIN_ONE/(RESOLUTION_16BIT-1.0))/1000.0; 
+  float voltageRead = ads_1115.computeVolts(result);
+
   float hallAmps = 0;
-  if (voltageRead >= VREF_150A)
-      hallAmps = (voltageRead - VREF_150A) * (HSTS016L_NOMINAL_CURRENT_150A / HSTS016L_VARIATION);
-  else if (voltageRead < VREF_150A)
-      hallAmps = (VREF_150A - voltageRead) * (HSTS016L_NOMINAL_CURRENT_150A / HSTS016L_VARIATION);
+  
+  hallAmps = (voltageRead - VREF_150A) * (HSTS016L_NOMINAL_CURRENT_150A / HSTS016L_VARIATION);
+
   return hallAmps;
 }
 
