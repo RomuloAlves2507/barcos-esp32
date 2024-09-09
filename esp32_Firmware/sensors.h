@@ -30,13 +30,16 @@
 #define HSTS016L_VARIATION 0.625 
 #define ACS_1_AVARAGE 2.5
 #define ACS_2_AVARAGE 2.5
-#define VREF_100A 2.48
-#define VREF_150A 2.48
+#define RESISTANCE_MOTOR 1.0 //ALTERAR QUANDO SOUBERMOS QUAL RESISTENCIA VAMOS USAR
 
 //Esp pins
 #define PIN_ACS_1 34 //GPIO34
-#define PIN_ACS_2 35 //GPIO35
+#define PIN_ACS_2 32 //GPIO35
 #define PIN_DHT 15 //GPIO15 pino que estamos conectado
+#define PIN_RESET_BUTTON 4 //GPIO4
+
+#define PIN_VREF_MOTOR 35 //GPIO35
+#define PIN_VREF_BATTERY 33 //GPIO33
 
 //Funções
 float get_motor_current();
@@ -54,5 +57,14 @@ float get_humidity();
 
 void setupDHT();
 void setupADS();
+
+//Implementação do botão Reset
+/*
+void initResetButton();
+void checkResetButton();
+*/
+
+float reference_motor_value();
+float reference_battery_value();
 
 #endif
