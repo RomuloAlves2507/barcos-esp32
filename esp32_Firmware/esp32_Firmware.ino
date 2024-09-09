@@ -19,17 +19,20 @@ void setup()
   init_wifi();
   init_socket();
   init_mppt();
-  setupDHT();
-  setupADS();
+  //setupDHT();
+  //setupADS();
 
 }
 //FORMATAÇÃO
 //CORRENTE DO MOTOR / CORRENTE DAS BATERIAS / TEMPERATURA / UMIDADE / TENSAO DE ALIMENTAÇÃO DA PCB / ESTADO DA ARRAY SOLAR 1 / ESTADO ARRAY SOLAR 2
 //TENSAO NA SAIDA DO MPPT (BATT) / TENSAO NA ENTRADA DO MPPT (PLACAS) / CORRENTE DO MPPT
 
+//FORMATAÇÃO
+//CORRENTE DO MOTOR / CORRENTE DAS BATERIAS / TEMPERATURA / UMIDADE / TENSAO DE ALIMENTAÇÃO DA PCB / ESTADO DA ARRAY SOLAR 1 / ESTADO ARRAY SOLAR 2
+//TENSAO NA SAIDA DO MPPT (BATT) / TENSAO NA ENTRADA DO MPPT (PLACAS) / CORRENTE DO MPPT
+
 unsigned long previousmillis = 0;
-void loop()
-{
+void loop() {
   connection_socket();
   unsigned long currentmillis = millis();
 
@@ -38,8 +41,7 @@ void loop()
 
   String result = get_dados_mppt(); //Ordem dos dados: tensao das baterias(saída MPPT) / tensao do painel solar(entrada MPPT) / corrente MPPT
 
-  if (currentmillis - previousmillis >= 1000)
-  {
+  if (currentmillis - previousmillis >= 1000) {
     float temperature = get_temperature();
     float humidity = get_humidity();
     //float voltage_alimentation = get_font_voltage();
@@ -53,10 +55,37 @@ void loop()
     String all_info =  version + "," + String(motor_current) + "," + String(battery_current) + "," + String(temperature) + "," + String(humidity)
                         + "," + String(voltage_alimentation) + "," + String(solarArray1_state) + "," + String(solarArray2_state) + "," + result;
 
-    // String all_info = version + ",1,2,3,4,5,6,7,8,9,10";
-  //   //Serial.println(all_info);
+
+    // testando 1 a 1:
+
+    //String all_info = version + "," + String(VREF_MOTOR) + "," + String(motor_current) + "," + String(VREF_BATERY) + "," + String(battery_current) + "," +String(voltage_alimentation) + ",6,7,8,9,10";
+
+    //String all_info = version + ",1," + String(battery_current) + ",3,4,5,6,7,8,9,10";
+
+    //String all_info = version + ",1,2," + String(temperature) + ",4,5,6,7,8,9,10";
+
+    //String all_info = version + ",1,2,3," + String(humidity) + ",5,6,7,8,9,10";
+
+    //String all_info = version + ",1,2,3,4," + String(voltage_alimentation) + ",6,7,8,9,10";
+
+    //String all_info = version + ",1,2,3,4,5," + String(solarArray1_state) + ",7,8,9,10";
+
+    //String all_info = version + ",1,2,3,4,5,6," + String(solarArray2_state) + ",8,9,10";
+
+    //String all_info = version + ",1,2,3,4,5,6,7," + result;
+
+    //String all_info = version + ",1,2,3,4,5,6,7,8,9,10";
+
+    //Serial.println(all_info);
+
     send_socket(all_info);
     previousmillis = currentmillis;
 
+    // verifica se o wifi continua conectado, necessário na troca de aparelho 
+    if (WiFi.status() != WL_CONNECTED) {
+      init_wifi();
+      init_socket();
     }
+
+  }
 }
